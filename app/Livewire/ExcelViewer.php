@@ -429,12 +429,13 @@ class ExcelViewer extends Component
         if (empty($cuenta)) return '';
         $c = trim((string)$cuenta);
         if (str_starts_with($c, '70')) return '1';
+        if (str_starts_with($c, '610')) return '2';
         if (str_starts_with($c, '607')) return '3';
         if (str_starts_with($c, '60')) return '4';
         if (str_starts_with($c, '64')) return '6';
         if (str_starts_with($c, '62') || str_starts_with($c, '63')) return '7';
         if (str_starts_with($c, '678') || str_starts_with($c, '778')) return '12';
-        if (str_starts_with($c, '66') || str_starts_with($c, '76')) return '14';
+        if (str_starts_with($c, '66') || str_starts_with($c, '76') || str_starts_with($c, '520')) return '14';
         return '';
     }
 
