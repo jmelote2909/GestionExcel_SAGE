@@ -20,6 +20,8 @@ class ExcelViewer extends Component
     public $metadata = [];
     public $years = [];
     public $selectedYear = 'Todos';
+    public $selectedEmpresa = 'Todos';
+    public $empresas = ['Todos', 'ARANCALO', 'CIMA', 'OTRO'];
     public $showImportReminder = false;
     public $file;
     public $hasData = false;
@@ -42,6 +44,10 @@ class ExcelViewer extends Component
         
         if ($this->selectedYear !== 'Todos') {
             $query->where('año', $this->selectedYear);
+        }
+
+        if ($this->selectedEmpresa !== 'Todos') {
+            $query->where('empresa', $this->selectedEmpresa);
         }
 
         $allData = $query->get();
@@ -136,6 +142,16 @@ class ExcelViewer extends Component
 
                 $mesValue = $mesColumn !== '' ? $this->getCellValue($sheet, $i, $mesColumn) : '';
 
+                $extractedEmpresa = strtoupper($this->metadata['empresa'] ?? '');
+                $mappedEmpresa = '';
+                if (str_contains($extractedEmpresa, 'ARANCALO')) {
+                    $mappedEmpresa = 'ARANCALO';
+                } elseif (str_contains($extractedEmpresa, 'CIMA')) {
+                    $mappedEmpresa = 'CIMA';
+                } elseif (str_contains($extractedEmpresa, 'OTRO')) {
+                    $mappedEmpresa = 'OTRO';
+                }
+
                 $row = [
                     'Cuenta' => $cuenta,
                     'Descripcion' => $descripcion,
@@ -147,7 +163,7 @@ class ExcelViewer extends Component
                     'SaldoA' => $this->getNumericCellValue($sheet, $i, 'H'),
                     'Grupo' => $this->getGrupoFromCuenta($cuenta),
                     'correccion' => '',
-                    'empresa' => '',
+                    'empresa' => $mappedEmpresa,
                     'mes' => $mesValue,
                     'año' => $this->metadata['ejercicio'] ?? '',
                     'is_summary' => $isSummary,
@@ -196,7 +212,7 @@ class ExcelViewer extends Component
 
     public function updated($property, $value)
     {
-        if ($property === 'selectedMonth' || $property === 'selectedYear') {
+        if ($property === 'selectedMonth' || $property === 'selectedYear' || $property === 'selectedEmpresa') {
             $this->loadData();
             return;
         }
@@ -290,7 +306,9 @@ class ExcelViewer extends Component
         $newRow = [
             'Cuenta' => '', 'Descripcion' => '', 'DebeP' => '', 'HaberP' => '', 
             'SaldoP' => '', 'presupuesto' => '', 'DebeA' => '', 'HaberA' => '', 'SaldoA' => '',
-            'Grupo' => '', 'correccion' => '', 'empresa' => '', 'mes' => $this->selectedMonth !== 'Todos' ? $this->selectedMonth : '', 'año' => $this->metadata['ejercicio'] ?? '',
+            'Grupo' => '', 'correccion' => '', 
+            'empresa' => $this->selectedEmpresa !== 'Todos' ? $this->selectedEmpresa : '', 
+            'mes' => $this->selectedMonth !== 'Todos' ? $this->selectedMonth : '', 'año' => $this->metadata['ejercicio'] ?? '',
             'is_summary' => false, 'metadata' => json_encode($this->metadata ?? [])
         ];
         $dbRow = \App\Models\Balance::create($newRow);

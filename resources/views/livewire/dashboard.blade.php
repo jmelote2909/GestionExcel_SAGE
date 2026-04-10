@@ -44,6 +44,13 @@
                                 <option value="{{ $month }}">{{ $month }}</option>
                             @endforeach
                         </select>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Empresa</label>
+                        <select wire:model.live="selectedEmpresa" class="border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors w-32">
+                            @foreach($empresas as $emp)
+                                <option value="{{ $emp }}">{{ $emp }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -52,7 +59,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
                 
                 <!-- Ventas -->
-                <a href="{{ route('category.show', ['category' => 'ventas', 'year' => $selectedYear, 'month' => $selectedMonth]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
+                <a href="{{ route('category.show', ['category' => 'ventas', 'year' => $selectedYear, 'month' => $selectedMonth, 'empresa' => $selectedEmpresa]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
                     <div class="bg-blue-500 text-white p-3 rounded-xl shadow-sm w-max mb-6">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     </div>
@@ -61,7 +68,7 @@
                 </a>
 
                 <!-- Compras -->
-                <a href="{{ route('category.show', ['category' => 'compras', 'year' => $selectedYear, 'month' => $selectedMonth]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
+                <a href="{{ route('category.show', ['category' => 'compras', 'year' => $selectedYear, 'month' => $selectedMonth, 'empresa' => $selectedEmpresa]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
                     <div class="bg-orange-500 text-white p-3 rounded-xl shadow-sm w-max mb-6">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
@@ -70,7 +77,7 @@
                 </a>
 
                 <!-- Salarios -->
-                <a href="{{ route('category.show', ['category' => 'salarios', 'year' => $selectedYear, 'month' => $selectedMonth]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
+                <a href="{{ route('category.show', ['category' => 'salarios', 'year' => $selectedYear, 'month' => $selectedMonth, 'empresa' => $selectedEmpresa]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
                     <div class="bg-purple-500 text-white p-3 rounded-xl shadow-sm w-max mb-6">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
@@ -79,7 +86,7 @@
                 </a>
 
                 <!-- Otros Gastos -->
-                <a href="{{ route('category.show', ['category' => 'otros-gastos', 'year' => $selectedYear, 'month' => $selectedMonth]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
+                <a href="{{ route('category.show', ['category' => 'otros-gastos', 'year' => $selectedYear, 'month' => $selectedMonth, 'empresa' => $selectedEmpresa]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
                     <div class="bg-red-500 text-white p-3 rounded-xl shadow-sm w-max mb-6">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     </div>
@@ -88,7 +95,7 @@
                 </a>
 
                 <!-- Financieros -->
-                <a href="{{ route('category.show', ['category' => 'financieros', 'year' => $selectedYear, 'month' => $selectedMonth]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
+                <a href="{{ route('category.show', ['category' => 'financieros', 'year' => $selectedYear, 'month' => $selectedMonth, 'empresa' => $selectedEmpresa]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
                     <div class="bg-sky-500 text-white p-3 rounded-xl shadow-sm w-max mb-6">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                     </div>
@@ -97,7 +104,7 @@
                 </a>
 
                 <!-- Resultado -->
-                <a href="{{ route('category.show', ['category' => 'resultado', 'year' => $selectedYear, 'month' => $selectedMonth]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
+                <a href="{{ route('category.show', ['category' => 'resultado', 'year' => $selectedYear, 'month' => $selectedMonth, 'empresa' => $selectedEmpresa]) }}" class="block bg-white p-8 rounded-2xl border border-gray-200 shadow-sm relative group hover:shadow-md transition-all duration-300">
                     <div class="bg-emerald-500 text-white p-3 rounded-xl shadow-sm w-max mb-6">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>

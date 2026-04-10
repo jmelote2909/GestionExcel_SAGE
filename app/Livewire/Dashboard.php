@@ -11,8 +11,10 @@ class Dashboard extends Component
 {
     public $selectedYear = 'Todos';
     public $selectedMonth = 'Todos';
+    public $selectedEmpresa = 'Todos';
     
     public $years = [];
+    public $empresas = ['Todos', 'ARANCALO', 'CIMA', 'OTRO'];
     public $months = [
         'Todos', 'Enero', 'Febrero', 'Marzo', 'Abril',
         'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
@@ -28,7 +30,7 @@ class Dashboard extends Component
 
     public function updated($property)
     {
-        if ($property === 'selectedYear' || $property === 'selectedMonth') {
+        if ($property === 'selectedYear' || $property === 'selectedMonth' || $property === 'selectedEmpresa') {
             $this->dispatch('summaryChartUpdated');
         }
     }
@@ -43,6 +45,10 @@ class Dashboard extends Component
 
         if ($this->selectedMonth !== 'Todos') {
             $baseQuery->where('mes', $this->selectedMonth);
+        }
+
+        if ($this->selectedEmpresa !== 'Todos') {
+            $baseQuery->where('empresa', $this->selectedEmpresa);
         }
 
         $ventasGroup = (clone $baseQuery)->where('Grupo', '1')->get();

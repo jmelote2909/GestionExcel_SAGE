@@ -80,6 +80,14 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Filtrar por Empresa</label>
+                            <select wire:model.live="selectedEmpresa" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors">
+                                @foreach($empresas as $emp)
+                                    <option value="{{ $emp }}">{{ $emp }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             @endif
@@ -159,7 +167,12 @@
                                         </div>
                                     </td>
                                     <td class="px-2 py-1.5 whitespace-nowrap">
-                                        <input type="text" wire:model.live.debounce.500ms="rows.{{ $id }}.empresa" @keydown.enter="$el.blur()" class="w-32 border-transparent hover:border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded text-sm px-2 py-1 bg-transparent hover:bg-white focus:bg-white transition-all text-gray-800">
+                                        <select wire:model.live="rows.{{ $id }}.empresa" class="w-32 border-transparent hover:border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm rounded bg-transparent hover:bg-white focus:bg-white py-1">
+                                            <option value=""></option>
+                                            <option value="ARANCALO">ARANCALO</option>
+                                            <option value="CIMA">CIMA</option>
+                                            <option value="OTRO">OTRO</option>
+                                        </select>
                                     </td>
                                     <td class="px-2 py-1.5 whitespace-nowrap">
                                         <select wire:model.live="rows.{{ $id }}.mes" class="w-28 border-transparent hover:border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm rounded bg-transparent hover:bg-white focus:bg-white py-1">

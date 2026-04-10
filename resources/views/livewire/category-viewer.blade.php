@@ -49,6 +49,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Empresa</label>
+                        <select wire:model.live="empresa" class="border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors w-32">
+                            @foreach($empresas as $emp)
+                                <option value="{{ $emp }}">{{ $emp }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             @endif
         </div>

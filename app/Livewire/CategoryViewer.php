@@ -16,10 +16,11 @@ class CategoryViewer extends Component
     public $year = 'Todos';
 
     #[Url]
-    public $month = 'Todos';
+    public $empresa = 'Todos';
 
     public $rows = [];
     public $years = [];
+    public $empresas = ['Todos', 'ARANCALO', 'CIMA', 'OTRO'];
     public $months = [
         'Todos', 'Enero', 'Febrero', 'Marzo', 'Abril',
         'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
@@ -86,6 +87,10 @@ class CategoryViewer extends Component
             $query->where('mes', $this->month);
         }
 
+        if ($this->empresa !== 'Todos') {
+            $query->where('empresa', $this->empresa);
+        }
+
         $allData = $query->get();
 
         $allData->transform(function ($item) {
@@ -112,7 +117,7 @@ class CategoryViewer extends Component
 
     public function updated($property, $value)
     {
-        if ($property === 'month' || $property === 'year') {
+        if ($property === 'month' || $property === 'year' || $property === 'empresa') {
             $this->loadData();
             $this->updateChartData();
             $this->dispatch('chartUpdated', [
@@ -135,6 +140,10 @@ class CategoryViewer extends Component
 
         if ($this->month !== 'Todos') {
             $query->where('mes', $this->month);
+        }
+
+        if ($this->empresa !== 'Todos') {
+            $query->where('empresa', $this->empresa);
         }
 
         $chartData = $query->select('Descripcion', 'SaldoP', 'correccion', 'presupuesto')
