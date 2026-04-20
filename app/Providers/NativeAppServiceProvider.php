@@ -23,10 +23,10 @@ class NativeAppServiceProvider implements ProvidesPhpIni
         }
 
         Window::open()
-            ->title('Gestor SAGE Excel (Debug Mode)')
+            ->title('Gestor SAGE Excel')
             ->width(1200)
             ->height(800)
-            ->showDevTools(true);
+            ->showDevTools(false);
     }
 
     /**

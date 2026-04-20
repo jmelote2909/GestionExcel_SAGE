@@ -10,8 +10,8 @@
             <p class="text-indigo-200 text-sm">Desglose de registros por categoría</p>
         </div>
         <div class="flex gap-4 items-center">
-            <a href="{{ route('dashboard') }}" class="bg-indigo-500 hover:bg-indigo-400 px-4 py-2 rounded-md shadow transition-all font-medium flex items-center gap-2 text-white text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('dashboard') }}" class="bg-white hover:bg-gray-100 px-4 py-2 rounded-md shadow-sm border border-gray-200 transition-all font-bold flex items-center gap-2 text-black text-sm">
+                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Volver al Dashboard
