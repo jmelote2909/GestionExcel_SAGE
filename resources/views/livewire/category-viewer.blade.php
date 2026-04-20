@@ -19,39 +19,39 @@
         </div>
     </div>
 
-    <div class="p-6 max-w-[95%] mx-auto w-full flex-1 overflow-y-auto custom-scrollbar relative">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex flex-wrap gap-6 items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-100 p-2.5 rounded-lg text-indigo-600">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+    <div class="p-6 max-w-[95%] mx-auto w-full flex-1 overflow-y-auto custom-scrollbar relative space-y-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-wrap gap-8 items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-indigo-600 text-white p-3 rounded-xl shadow-md">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
                 </div>
                 <div>
-                    <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-0.5">Filtros Activos</p>
-                    <h3 class="font-bold text-gray-800 text-lg">Personaliza la vista</h3>
+                    <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-0.5">Filtros Avanzados</p>
+                    <h3 class="font-extrabold text-gray-800 text-xl">Personaliza tu Vista</h3>
                 </div>
             </div>
 
             @if($hasData)
-                <div class="flex items-center gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Año</label>
-                        <select wire:model.live="year" class="border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors w-32">
+                <div class="flex flex-wrap items-center gap-6">
+                    <div class="min-w-[140px]">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Año</label>
+                        <select wire:model.live="year" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
                             @foreach($years as $y)
                                 <option value="{{ $y }}">{{ $y }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Mes</label>
-                        <select wire:model.live="month" class="border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors w-32">
+                    <div class="min-w-[140px]">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Mes</label>
+                        <select wire:model.live="month" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
                             @foreach($months as $m)
                                 <option value="{{ $m }}">{{ $m }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Empresa</label>
-                        <select wire:model.live="empresa" class="border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors w-32">
+                    <div class="min-w-[140px]">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Empresa</label>
+                        <select wire:model.live="empresa" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
                             @foreach($empresas as $emp)
                                 <option value="{{ $emp }}">{{ $emp }}</option>
                             @endforeach

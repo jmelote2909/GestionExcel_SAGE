@@ -18,6 +18,9 @@ class CategoryViewer extends Component
     #[Url]
     public $empresa = 'Todos';
 
+    #[Url]
+    public $month = 'Todos';
+
     public $rows = [];
     public $years = [];
     public $empresas = ['Todos', 'ARANCALO', 'CIMA', 'OTRO'];
