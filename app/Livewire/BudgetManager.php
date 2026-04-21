@@ -68,6 +68,8 @@ class BudgetManager extends Component
             ->distinct()
             ->pluck('Descripcion')
             ->filter()
+            ->map(fn($d) => trim($d))
+            ->unique()
             ->toArray();
 
         // Get budgets and real values for the selected year
@@ -77,24 +79,43 @@ class BudgetManager extends Component
 
         $this->budgets = [];
         $this->reals = [];
-        $this->totalAnnualBudget = 0;
-        $this->totalAnnualReal = 0;
+        $this->totalAnnualBudget = 0.0;
+        $this->totalAnnualReal = 0.0;
 
-        foreach ($this->descriptions as $desc) {
-            $desc = trim($desc);
-            foreach ($this->months as $month) {
-                $month = trim($month);
-                $matches = $records->where('Descripcion', $desc)->where('mes', $month);
-                
-                $budget = (float)$matches->sum('presupuesto');
-                $real = abs($matches->sum('corrected_saldo_float'));
-                
-                $this->budgets[$desc][$month] = $budget;
-                $this->reals[$desc][$month] = $real;
-                
-                $this->totalAnnualBudget += $budget;
-                $this->totalAnnualReal += $real;
+        try {
+            foreach ($this->descriptions as $desc) {
+                foreach ($this->months as $month) {
+                    $month = trim($month);
+                    $matches = $records->where('Descripcion', $desc)->where('mes', $month);
+
+                    // Use reduce() instead of sum() because presupuesto is stored as
+                    // a string in the DB and sum() fails with "int + string" when the
+                    // field contains empty strings, nulls or comma-formatted numbers.
+                    $budget = $matches->reduce(function (float $carry, $item) {
+                        $val = (string)($item->presupuesto ?? '0');
+                        if (strpos($val, ',') !== false) {
+                            $val = str_replace('.', '', $val);
+                            $val = str_replace(',', '.', $val);
+                        }
+                        return $carry + (is_numeric($val) ? (float)$val : 0.0);
+                    }, 0.0);
+
+                    // corrected_saldo_float is an Eloquent accessor that always returns float
+                    $real = abs($matches->reduce(function (float $carry, $item) {
+                        return $carry + (float)($item->corrected_saldo_float ?? 0.0);
+                    }, 0.0));
+
+                    $this->budgets[$desc][$month] = $budget;
+                    $this->reals[$desc][$month] = $real;
+
+                    $this->totalAnnualBudget += $budget;
+                    $this->totalAnnualReal += $real;
+                }
             }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error in BudgetManager loadData loop: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error($e->getTraceAsString());
+            session()->flash('error', 'Error al cargar los datos del presupuesto.');
         }
 
         $this->averageCompliance = $this->totalAnnualBudget > 0 

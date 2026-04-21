@@ -120,8 +120,20 @@
             </div>
 
             <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-                <div class="p-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                    <span class="text-sm text-gray-500 font-medium">Mostrando {{ count($rows) }} filas de datos</span>
+                <div class="p-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center gap-3 flex-wrap">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500 font-medium">Mostrando {{ count($rows) }} filas de datos</span>
+                        @if(count($selectedRows) > 0)
+                            <button
+                                wire:click="deleteSelected"
+                                wire:confirm="¿Eliminar {{ count($selectedRows) }} fila(s) seleccionada(s)? Esta acción no se puede deshacer."
+                                class="flex items-center gap-1.5 bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-all px-3 py-1.5 rounded-md text-sm font-bold border border-red-200"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Eliminar seleccionadas ({{ count($selectedRows) }})
+                            </button>
+                        @endif
+                    </div>
                     <button wire:click="addRow" class="bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all px-3 py-1.5 rounded-md text-sm font-bold flex items-center gap-1 border border-emerald-200">
                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Añadir Fila
@@ -131,18 +143,74 @@
                     <table class="min-w-full divide-y divide-gray-200 relative">
                         <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
                             <tr>
-                                @foreach($columns as $col)
-                                    <th scope="col" class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider bg-gray-100">
-                                        {{ $col }}
+                                {{-- Master checkbox --}}
+                                <th scope="col" class="px-3 py-3 bg-gray-100 w-10">
+                                    <input
+                                        type="checkbox"
+                                        class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                        @change="$wire.toggleSelectAll($event.target.checked)"
+                                        :checked="{{ count($selectedRows) > 0 && count($selectedRows) === count($rows) ? 'true' : 'false' }}"
+                                    >
+                                </th>
+
+                                @php
+                                    $sortableColumns = [
+                                        'Cuenta'      => 'Cuenta',
+                                        'Descripcion' => 'Descripcion',
+                                        'SaldoP'      => 'SaldoP',
+                                        'correccion'  => 'correccion',
+                                        'Saldo Final' => 'Saldo Final',
+                                        'presupuesto' => 'presupuesto',
+                                        'Grupo'       => 'Grupo',
+                                        'empresa'     => 'empresa',
+                                        'mes'         => 'mes',
+                                        'año'         => 'año',
+                                    ];
+                                @endphp
+
+                                @foreach($sortableColumns as $colKey => $colLabel)
+                                    <th
+                                        scope="col"
+                                        wire:click="sort('{{ $colKey }}')"
+                                        class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider bg-gray-100 cursor-pointer select-none hover:bg-indigo-50 hover:text-indigo-700 transition-colors group"
+                                    >
+                                        <span class="flex items-center gap-1">
+                                            {{ $colLabel }}
+                                            <span class="inline-flex flex-col leading-none opacity-40 group-hover:opacity-100 transition-opacity">
+                                                @if($sortBy === $colKey)
+                                                    @if($sortDirection === 'asc')
+                                                        <svg class="w-3 h-3 text-indigo-600 opacity-100" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                                                    @else
+                                                        <svg class="w-3 h-3 text-indigo-600 opacity-100" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                                    @endif
+                                                @else
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/><path d="M5 10l5 5 5-5H5z" class="opacity-40"/></svg>
+                                                @endif
+                                            </span>
+                                        </span>
                                     </th>
                                 @endforeach
+
                                 <th scope="col" class="sticky right-0 px-3 py-3 bg-gray-100 z-20 w-12 border-l border-gray-200 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
                             @foreach($rows as $id => $row)
-                                <tr class="hover:bg-indigo-50/50 group transition-colors" wire:key="row-{{ $id }}">
+                                <tr
+                                    class="hover:bg-indigo-50/50 group transition-colors {{ in_array($id, $selectedRows) ? 'bg-indigo-50 ring-1 ring-inset ring-indigo-200' : '' }}"
+                                    wire:key="row-{{ $id }}"
+                                >
+                                    {{-- Row checkbox --}}
+                                    <td class="px-3 py-1.5 whitespace-nowrap">
+                                        <input
+                                            type="checkbox"
+                                            value="{{ $id }}"
+                                            wire:model.live="selectedRows"
+                                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                        >
+                                    </td>
+
                                     <td class="px-2 py-1.5 whitespace-nowrap">
                                         <input type="text" wire:model.live.debounce.150ms="rows.{{ $id }}.Cuenta" @keydown.enter="$el.blur()" class="w-28 border-transparent hover:border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded text-sm px-2 py-1 bg-transparent hover:bg-white focus:bg-white transition-all text-gray-800 font-medium">
                                     </td>
@@ -187,14 +255,14 @@
                                     </td>
                                     <td class="px-2 py-1.5 whitespace-nowrap text-right sticky right-0 bg-white group-hover:bg-indigo-50/50 border-l border-gray-100 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.02)]">
                                         <div class="flex items-center gap-1 justify-end">
-                                            <!-- Success State (Explicitly set from server) -->
+                                            <!-- Success State -->
                                             @if(isset($savedRows[$id]) && $savedRows[$id])
                                                 <span class="text-green-500" x-init="setTimeout(() => $wire.set('savedRows.{{ $id }}', false), 2000)">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                                 </span>
                                             @endif
                                             
-                                            <!-- Syncing State (Livewire Loading) -->
+                                            <!-- Syncing State -->
                                             <div wire:loading wire:target="rows.{{ $id }}.Cuenta, rows.{{ $id }}.Descripcion, rows.{{ $id }}.SaldoP, rows.{{ $id }}.correccion, rows.{{ $id }}.presupuesto" class="text-indigo-400">
                                                 <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -213,6 +281,7 @@
                     </table>
                 </div>
             </div>
+
         @else
             <div class="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 mt-8 opacity-70">
                 <div class="bg-indigo-50 p-4 rounded-full mb-4">

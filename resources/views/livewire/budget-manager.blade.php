@@ -26,6 +26,15 @@
             </div>
         </div>
     </header>
+    
+    @if (session()->has('error'))
+        <div class="px-8 mt-4">
+            <div class="bg-rose-50 border border-rose-200 text-rose-700 px-6 py-4 rounded-2xl flex items-center gap-4">
+                <svg class="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div class="font-bold text-sm">{{ session('error') }}</div>
+            </div>
+        </div>
+    @endif
 
     <!-- Content Area -->
     <div class="flex-1 overflow-y-auto custom-scrollbar p-8">
@@ -81,7 +90,7 @@
                         <div class="text-right">
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Total Anual</p>
                             <p class="text-sm font-black text-indigo-600">
-                                {{ number_format(array_sum($budgets[$desc]), 0, ',', '.') }} €
+                                {{ number_format(array_sum($budgets[$desc] ?? []), 0, ',', '.') }} €
                             </p>
                         </div>
                     </div>
@@ -109,7 +118,7 @@
                                         <input 
                                             type="text" 
                                             value="{{ number_format($budget, 0, ',', '.') }}"
-                                            wire:blur="saveBudget('{{ $desc }}', '{{ $month }}', $event.target.value)"
+                                            wire:blur="saveBudget('{{ addslashes($desc) }}', '{{ addslashes($month) }}', $event.target.value)"
                                             class="w-full bg-transparent border-none p-0 text-lg font-black text-gray-900 focus:ring-0 placeholder-gray-300"
                                             placeholder="0"
                                         >
