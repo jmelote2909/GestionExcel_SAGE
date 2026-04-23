@@ -29,6 +29,9 @@ class ExcelViewer extends Component
     public $selectedRows = []; // IDs of rows selected via checkboxes
     public $sortBy = 'Cuenta';  // Default sort column
     public $sortDirection = 'asc'; // 'asc' or 'desc'
+    public $startMonth = 'Enero';
+    public $endMonth = 'Diciembre';
+    public $filterMode = 'single'; // 'single' or 'range'
 
     public function mount()
     {
@@ -41,8 +44,20 @@ class ExcelViewer extends Component
     {
         $query = \App\Models\Balance::query();
         
-        if ($this->selectedMonth !== 'Todos') {
-            $query->where('mes', $this->selectedMonth);
+        if ($this->filterMode === 'single') {
+            if ($this->selectedMonth !== 'Todos') {
+                $query->where('mes', $this->selectedMonth);
+            }
+        } else {
+            $monthMap = [
+                'Enero' => 1, 'Febrero' => 2, 'Marzo' => 3, 'Abril' => 4,
+                'Mayo' => 5, 'Junio' => 6, 'Julio' => 7, 'Agosto' => 8,
+                'Septiembre' => 9, 'Octubre' => 10, 'Noviembre' => 11, 'Diciembre' => 12
+            ];
+            $start = $monthMap[$this->startMonth] ?? 1;
+            $end = $monthMap[$this->endMonth] ?? 12;
+            $monthNamesInRange = array_keys(array_filter($monthMap, fn($idx) => $idx >= $start && $idx <= $end));
+            $query->whereIn('mes', $monthNamesInRange);
         }
         
         if ($this->selectedYear !== 'Todos') {
@@ -229,7 +244,7 @@ class ExcelViewer extends Component
 
     public function updated($property, $value)
     {
-        if ($property === 'selectedMonth' || $property === 'selectedYear' || $property === 'selectedEmpresa') {
+        if (in_array($property, ['selectedMonth', 'selectedYear', 'selectedEmpresa', 'startMonth', 'endMonth', 'filterMode'])) {
             $this->loadData();
             return;
         }

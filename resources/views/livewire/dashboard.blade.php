@@ -29,6 +29,14 @@
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-6">
+                    <div class="min-w-[120px]">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Modo Filtro</label>
+                        <div class="flex bg-gray-100 p-1 rounded-xl">
+                            <button wire:click="$set('filterMode', 'single')" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ $filterMode === 'single' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700' }}">Mes único</button>
+                            <button wire:click="$set('filterMode', 'range')" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ $filterMode === 'range' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700' }}">Rango</button>
+                        </div>
+                    </div>
+                    
                     <div class="min-w-[140px]">
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Año</label>
                         <select wire:model.live="selectedYear" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
@@ -37,14 +45,40 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="min-w-[140px]">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Mes</label>
-                        <select wire:model.live="selectedMonth" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
-                            @foreach($months as $month)
-                                <option value="{{ $month }}">{{ $month }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+
+                    @if($filterMode === 'single')
+                        <div class="min-w-[140px]">
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Mes</label>
+                            <select wire:model.live="selectedMonth" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
+                                @foreach($months as $month)
+                                    <option value="{{ $month }}">{{ $month }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <div class="flex items-end gap-3">
+                            <div class="min-w-[140px]">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Desde</label>
+                                <select wire:model.live="startMonth" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
+                                    @foreach(array_slice($months, 1) as $month)
+                                        <option value="{{ $month }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3 text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </div>
+                            <div class="min-w-[140px]">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Hasta</label>
+                                <select wire:model.live="endMonth" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
+                                    @foreach(array_slice($months, 1) as $month)
+                                        <option value="{{ $month }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="min-w-[140px]">
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Empresa</label>
                         <select wire:model.live="selectedEmpresa" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm border px-4 py-2.5 text-sm bg-gray-50/50 cursor-pointer hover:bg-white transition-all">
@@ -76,9 +110,21 @@
                     <div class="bg-orange-500 text-white p-4 rounded-2xl shadow-lg ring-4 ring-orange-50 mb-4 group-hover:scale-110 transition-transform">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <h4 class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-2">COMPRAS</h4>
-                    <p class="text-2xl font-black text-gray-900">{{ number_format($compras, 2, ',', '.') }} €</p>
-                    <div class="mt-4 text-xs font-medium text-orange-600 bg-orange-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
+                    <h4 class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-3">COMPRAS</h4>
+                    
+                    <div class="space-y-2 mb-3">
+                        <p class="text-xs font-extrabold text-gray-800 tracking-tight">
+                            COMPRAS: <span class="text-gray-900 font-black">{{ number_format($compras60, 2, ',', '.') }} €</span>
+                        </p>
+                        <p class="text-xs font-extrabold text-gray-800 tracking-tight">
+                            VAR. EXISTENCIAS: <span class="text-gray-900 font-black">{{ number_format($compras61, 2, ',', '.') }} €</span>
+                        </p>
+                    </div>
+
+                    <div class="mt-1 text-[10px] font-bold text-orange-500 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100">
+                        {{ number_format($p_compras, 1, ',', '.') }}% s/ventas
+                    </div>
+                    <div class="mt-3 text-xs font-medium text-orange-600 bg-orange-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
                 </a>
 
                 <!-- Salarios -->
@@ -89,7 +135,10 @@
                     </div>
                     <h4 class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-2">SALARIOS</h4>
                     <p class="text-2xl font-black text-gray-900">{{ number_format($salarios, 2, ',', '.') }} €</p>
-                    <div class="mt-4 text-xs font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
+                    <div class="mt-1 text-[10px] font-bold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                        {{ number_format($p_salarios, 1, ',', '.') }}% s/ventas
+                    </div>
+                    <div class="mt-3 text-xs font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
                 </a>
 
                 <!-- Otros Gastos -->
@@ -100,7 +149,10 @@
                     </div>
                     <h4 class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-2">OTROS GASTOS</h4>
                     <p class="text-2xl font-black text-gray-900">{{ number_format($otrosGastos, 2, ',', '.') }} €</p>
-                    <div class="mt-4 text-xs font-medium text-red-600 bg-red-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
+                    <div class="mt-1 text-[10px] font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                        {{ number_format($p_otrosGastos, 1, ',', '.') }}% s/ventas
+                    </div>
+                    <div class="mt-3 text-xs font-medium text-red-600 bg-red-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
                 </a>
 
                 <!-- Financieros -->
@@ -111,7 +163,10 @@
                     </div>
                     <h4 class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-2">FINANCIEROS</h4>
                     <p class="text-2xl font-black text-gray-900">{{ number_format($financieros, 2, ',', '.') }} €</p>
-                    <div class="mt-4 text-xs font-medium text-sky-600 bg-sky-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
+                    <div class="mt-1 text-[10px] font-bold text-sky-500 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">
+                        {{ number_format($p_financieros, 1, ',', '.') }}% s/ventas
+                    </div>
+                    <div class="mt-3 text-xs font-medium text-sky-600 bg-sky-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
                 </a>
 
                 <!-- Resultado -->
@@ -122,7 +177,10 @@
                     </div>
                     <h4 class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-2">RESULTADO</h4>
                     <p class="text-2xl font-black text-gray-900">{{ number_format($resultado, 2, ',', '.') }} €</p>
-                    <div class="mt-4 text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
+                    <div class="mt-1 text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                        {{ number_format($p_resultado, 1, ',', '.') }}% s/ventas
+                    </div>
+                    <div class="mt-3 text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</div>
                 </a>
             </div>
 

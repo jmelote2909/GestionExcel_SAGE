@@ -72,13 +72,47 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Filtrar por Mes</label>
-                            <select wire:model.live="selectedMonth" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors">
-                                @foreach($months as $month)
-                                    <option value="{{ $month }}">{{ $month }}</option>
-                                @endforeach
-                            </select>
+                        <div class="flex flex-wrap items-end gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Modo Filtro</label>
+                                <div class="flex bg-gray-100 p-1 rounded-md">
+                                    <button wire:click="$set('filterMode', 'single')" class="px-2 py-1 text-xs font-bold rounded transition-all {{ $filterMode === 'single' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500' }}">Mes único</button>
+                                    <button wire:click="$set('filterMode', 'range')" class="px-2 py-1 text-xs font-bold rounded transition-all {{ $filterMode === 'range' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500' }}">Rango</button>
+                                </div>
+                            </div>
+                            
+                            @if($filterMode === 'single')
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Filtrar por Mes</label>
+                                    <select wire:model.live="selectedMonth" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors">
+                                        @foreach($months as $month)
+                                            <option value="{{ $month }}">{{ $month }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @else
+                                <div class="flex items-end gap-2">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Desde</label>
+                                        <select wire:model.live="startMonth" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors">
+                                            @foreach(array_slice($months, 1) as $month)
+                                                <option value="{{ $month }}">{{ $month }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 text-gray-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Hasta</label>
+                                        <select wire:model.live="endMonth" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm border px-3 py-2 text-sm bg-white cursor-pointer hover:border-indigo-400 transition-colors">
+                                            @foreach(array_slice($months, 1) as $month)
+                                                <option value="{{ $month }}">{{ $month }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Filtrar por Empresa</label>
