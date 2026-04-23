@@ -163,7 +163,7 @@ class CategoryViewer extends Component
         $this->chartReal = $chartData->pluck('real')->toArray();
         $this->chartBudget = $chartData->pluck('budget')->toArray();
     }
-
+    // hola
     public function getCategoryNameProperty()
     {
         return match ($this->categoria) {
